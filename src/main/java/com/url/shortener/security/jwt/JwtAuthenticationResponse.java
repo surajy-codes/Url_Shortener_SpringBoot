@@ -1,4 +1,4 @@
-package com.url.shortner.security.jwt;
+package com.url.shortener.security.jwt;
 
 import lombok.Data;
 

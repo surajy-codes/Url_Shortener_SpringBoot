@@ -1,6 +1,6 @@
-package com.url.shortner.repository;
+package com.url.shortener.repository;
 
-import com.url.shortner.models.User;
+import com.url.shortener.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
