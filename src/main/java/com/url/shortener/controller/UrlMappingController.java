@@ -24,7 +24,7 @@ public class UrlMappingController {
     private UrlMappingService urlMappingService;
 
     @PostMapping("/shorten")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('USER')")//so that, we can't access this end point, without proper authentication,...
     public ResponseEntity<UrlMappingDTO> createShortUrl(@RequestBody Map<String,String> request, Principal principal){
         String originalUrl=request.get("originalUrl");//now we need user, so to set the userid in the db
         User user=userService.findByUsername(principal.getName());
