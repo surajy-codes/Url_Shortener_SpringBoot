@@ -24,8 +24,4 @@ public class RedirectController {
         }
         return ResponseEntity.notFound().build();
     }
-
 }
-
-
-
