@@ -12,8 +12,9 @@ A scalable URL shortening service inspired by Bitly.
 ## Tech Stack
 - Java
 - Spring Boot
-- MySQL
 - Spring Security (JWT)
+- React
+- MySQL
 - Maven
 
 ## How to Run
