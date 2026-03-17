@@ -44,7 +44,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
             });
           });
 
-          // await refetch();
+          await refetch();//so that, just after adding new url, it would get correct data,..
           reset();
           setOpen(false);
     } catch (error) {
