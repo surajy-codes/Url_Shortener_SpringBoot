@@ -24,13 +24,18 @@ public class UrlMappingService {
     private ClickEventRepository clickEventRepository;
 
     public UrlMappingDTO createShortUrl(String originalUrl, User user){
-        String shortUrl=generateShortUrl();
+        String shortUrl;
+
+        do {
+            shortUrl = generateShortUrl();
+        }while(urlMappingRepository.existsByShortUrl(shortUrl));//for uniqueness, even though less chance is there but still for correctness,...
+
         UrlMapping urlMapping=new UrlMapping();
         urlMapping.setOriginalUrl(originalUrl);
         urlMapping.setShortUrl(shortUrl);
         urlMapping.setUser(user);
         urlMapping.setCreatedDate(LocalDateTime.now());
-        UrlMapping savedUrlMapping =urlMappingRepository.save(urlMapping);
+        UrlMapping savedUrlMapping = urlMappingRepository.save(urlMapping);
         return convertToDto(savedUrlMapping);
     }
     public UrlMappingDTO convertToDto(UrlMapping urlMapping){
@@ -41,7 +46,6 @@ public class UrlMappingService {
         urlMappingDTO.setOriginalUrl(urlMapping.getOriginalUrl());
         urlMappingDTO.setShortUrl(urlMapping.getShortUrl());
         urlMappingDTO.setClickCount(urlMapping.getClickCount());
-
         return urlMappingDTO;
     }
 
