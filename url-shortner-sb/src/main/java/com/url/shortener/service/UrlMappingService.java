@@ -23,21 +23,27 @@ public class UrlMappingService {
     private UrlMappingRepository urlMappingRepository;
     private ClickEventRepository clickEventRepository;
 
-    public UrlMappingDTO createShortUrl(String originalUrl, User user){
-        String shortUrl;
+    private static final String BASE62 = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
-        do {
-            shortUrl = generateShortUrl();
-        }while(urlMappingRepository.existsByShortUrl(shortUrl));//for uniqueness, even though less chance is there but still for correctness,...
 
-        UrlMapping urlMapping=new UrlMapping();
+    public UrlMappingDTO createShortUrl(String originalUrl, User user) {
+        UrlMapping urlMapping = new UrlMapping();
         urlMapping.setOriginalUrl(originalUrl);
-        urlMapping.setShortUrl(shortUrl);
         urlMapping.setUser(user);
         urlMapping.setCreatedDate(LocalDateTime.now());
-        UrlMapping savedUrlMapping = urlMappingRepository.save(urlMapping);
-        return convertToDto(savedUrlMapping);
+
+        // First save: get DB-generated ID
+        UrlMapping saved = urlMappingRepository.save(urlMapping);
+
+        // Base62 from ID
+        String shortUrl = generateShortUrl(saved.getId());
+        saved.setShortUrl(shortUrl);
+
+        // Second save: persist short code
+        UrlMapping finalSaved = urlMappingRepository.save(saved);
+        return convertToDto(finalSaved);
     }
+
     public UrlMappingDTO convertToDto(UrlMapping urlMapping){
         UrlMappingDTO urlMappingDTO=new UrlMappingDTO();
         urlMappingDTO.setId(urlMapping.getId());
@@ -49,16 +55,22 @@ public class UrlMappingService {
         return urlMappingDTO;
     }
 
-    public String generateShortUrl(){
-        String chars="asdfghjklqwertyuiopzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM1234567890";
-        Random random =new Random();
-        StringBuilder shortUrl=new StringBuilder(8);
-
-        for(int i=0;i<8;i++){
-            shortUrl.append(chars.charAt(random.nextInt(chars.length())));
+    private String generateShortUrl(Long id) {
+        if (id == null || id < 0) {
+            throw new IllegalArgumentException("ID must be non-null and non-negative");
         }
-        return shortUrl.toString();
+        if (id == 0) return "0";
+
+        StringBuilder sb = new StringBuilder();
+        long value = id;
+        while (value > 0) {
+            int rem = (int) (value % 62);
+            sb.append(BASE62.charAt(rem));
+            value /= 62;
+        }
+        return sb.reverse().toString();
     }
+
     public List<UrlMappingDTO> getUrlsByUser(User user){
         return urlMappingRepository.findByUser(user).stream()
                 .map(this::convertToDto)
