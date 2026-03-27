@@ -11,6 +11,7 @@ import toast from 'react-hot-toast';
 const CreateNewShorten = ({ setOpen, refetch }) => {
     const { token } = useStoreContext();
     const [loading, setLoading] = useState(false);
+    const frontendBaseUrl = window.location.origin;
 
   const {
     register,
@@ -35,7 +36,7 @@ const CreateNewShorten = ({ setOpen, refetch }) => {
             },
           });
 
-          const shortenUrl = `${import.meta.env.VITE_REACT_FRONT_END_URL + "/s/" + `${res.shortUrl}`}`;
+          const shortenUrl = `${frontendBaseUrl}/s/${res.shortUrl}`;
           navigator.clipboard.writeText(shortenUrl).then(() => {
             toast.success("Short URL Copied to Clipboard", {
                 position: "bottom-center",
