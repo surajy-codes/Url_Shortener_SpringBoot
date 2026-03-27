@@ -6,7 +6,7 @@ import { IoCopy } from 'react-icons/io5';
 import { LiaCheckSolid } from 'react-icons/lia';
 import { MdAnalytics, MdOutlineAdsClick } from 'react-icons/md';
 import api from '../../api/api';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useStoreContext } from '../../contextApi/ContextApi';
 import { Hourglass } from 'react-loader-spinner';
 import Graph from './Graph';
@@ -73,11 +73,13 @@ const ShortenItem = ({ originalUrl, shortUrl, clickCount, createdDate }) => {
                 {subDomain + "/" + `${shortUrl}`}
             </a> */}
 
-            <Link
+            <a
+              target="_blank"
+              rel="noreferrer"
               className='text-[17px]  font-montserrat font-[600] text-linkColor'
-              to={`/s/${shortUrl}`}>
+              href={`${frontendBaseUrl}/s/${shortUrl}`}>
                   {subDomain + "/s/" + `${shortUrl}`}
-            </Link>
+            </a>
             <FaExternalLinkAlt className="text-linkColor" />
             </div>
 
