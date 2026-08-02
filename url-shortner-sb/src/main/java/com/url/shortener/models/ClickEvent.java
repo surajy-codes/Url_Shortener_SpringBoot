@@ -1,5 +1,6 @@
 package com.url.shortener.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -13,6 +14,7 @@ public class ClickEvent {
     private Long id;
     private LocalDateTime clickDate;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "url_mapping_id")
     private UrlMapping urlMapping;
